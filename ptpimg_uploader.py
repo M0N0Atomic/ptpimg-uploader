@@ -8,12 +8,6 @@ import mimetypes
 from io import BytesIO
 from pymediainfo import MediaInfo
 
-argc=len(sys.argv)
-if argc==1:
-    print("""Usage: ptpimg_uploader.py -k API_KEY .. 
-Captures screenshots and uploads images to ptpimg, spitting out mediainfo & urls.""")
-    sys.exit()
-
 def getVideoDuration(fname):
     media_info = MediaInfo.parse(fname)
     for track in media_info.tracks:
@@ -44,7 +38,7 @@ def getscreenshot():
     elif screenshot.lower() == 'n':
         prompt = "Do you want to upload from url? [Y/n]"
         if not prompt.lower() == 'n':
-            screenshots = [ x for x in input('Enter urls seperated by space').split()]
+            screenshots = [ x for x in input('Enter urls seperated by space: ').split()]
     else:
         print("Uploading Existing Images...")
         screenshots = [x for x in os.listdir() if x.endswith(".png")]
@@ -165,7 +159,6 @@ def main():
         pyperclip = None
 
     parser = argparse.ArgumentParser(description="PTPImg uploader")
-    parser.add_argument('images', metavar='filename|url', nargs='+')
     parser.add_argument(
         '-k', '--api-key', default=os.environ.get('PTPIMG_API_KEY'),
         help='PTPImg API key (or set the PTPIMG_API_KEY environment variable)')
