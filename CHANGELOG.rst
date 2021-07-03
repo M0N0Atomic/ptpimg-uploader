@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+0.7 (2021-07-03)
+-----------------
+
+* Added functionality
+    * Take screenshots from video file.
+    * Get mediainfo from CLI parameter [optional] with tags.
+    * Do not require filename|urls in the CLI.
+        * From screenshots or prompt for urls else existing images in directory.
+
 0.6 (2021-05-23)
 -----------------
 
