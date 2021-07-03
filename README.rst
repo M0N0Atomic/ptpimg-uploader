@@ -11,9 +11,9 @@ Installation
 
   * Install python3 package ``requests`` (usually ``apt-get install python3-requests`` or ``pip3 install requests``).
 
-  * If you want to take screenshots ffmpeg is needed in path or in the current working directory.
+  * If you want to take screenshots ``ffmpeg`` is needed in path or in the current working directory.
   
-  * If you want to mediainfo capability, install python3 package ``pymediainfo`` (usually ``apt-get install pymediainfo`` or ``pip3 install pymediainfo``).
+  * For mediainfo capability, install python3 package ``pymediainfo`` (usually ``apt-get install pymediainfo`` or ``pip3 install pymediainfo``).
   
   * If you want clipboard support, install ``pyperclip`` too.
 
