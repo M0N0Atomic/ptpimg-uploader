@@ -42,7 +42,7 @@ Run
 
 .. code-block:: bash
 
-    ptpimg_uploader.py -h
+    python ptpimg_uploader.py -h
 
 
 to get command-line help.
@@ -51,7 +51,7 @@ Usage:
 
 .. code-block:: bash
 
-    ptpimg_uploader.py -k API_KEY
+    python ptpimg_uploader.py -k API_KEY
 
 
 An uploaded URL will be printed to the console.
@@ -60,13 +60,13 @@ If ``--media`` parameter is specified, mediainfo will be printed along with tags
 
 .. code-block:: bash
 
-    ptpimg_uploader.py --media
+    python ptpimg_uploader.py --media
 
 If ``--bbcode`` parameter is specified, URLS will be wrapped in BBCode ``[img]`` tags:
 
 .. code-block:: bash
 
-    ptpimg_uploader.py --bbcode
+    python ptpimg_uploader.py --bbcode
 
 
 If pyperclip python package is installed, the URL will be additionally copied to the clipboard.
