@@ -25,23 +25,18 @@ def getMediainfo(fname):
     outstr = MediaInfo.parse(fname,full=False,output="")
     return outstr
 
-def getscreenshot():
-    screenshot = input("Do you want to take screenshots? [Y/n]:")
-    if not screenshot.lower() == 'n':
-        fname=input("Enter file path with extension: ")
-        no=int(input("Enter no. of screenshots: "))
-        vid=getVideoDuration(fname)
-        ss=str(int(vid/no))
-        command="ffmpeg -i '"+fname+"' -vf fps=1/"+ss+" img%d.png"
-        subprocess.call(shlex.split(command))
-        screenshots = [x for x in os.listdir() if x.endswith(".png")]
-    elif screenshot.lower() == 'n':
-        prompt = "Do you want to upload from url? [Y/n]"
-        if not prompt.lower() == 'n':
-            screenshots = [ x for x in input('Enter urls seperated by space: ').split()]
+def getscreenshot(fname):
+    no = int(input("Enter no. of screenshots : "))
+    output = ' '
+    output += input("Output path (leave empty for current directory) : " )
+    vid = getVideoDuration(fname)
+    ss = str(int(vid/no))
+    command = "ffmpeg -i '"+fname+"' -vf fps=1/"+ss+output+"ptp%d.png"
+    subprocess.call(shlex.split(command))
+    if not output == ' ':
+        screenshots = [x for x in os.listdir(output) if x.startswith("ptp") and x.endswith('.png')]
     else:
-        print("Uploading Existing Images...")
-        screenshots = [x for x in os.listdir() if x.endswith(".png")]
+        screenshots = [x for x in os.listdir() if x.startswith("ptp") and x.endswith('.png')]
     return screenshots
 
 mimetypes.init()
@@ -182,11 +177,24 @@ def main():
     if not args.api_key:
         parser.error('Please specify an API key')
     try:
-        fname=None
-        ss=getscreenshot()
-        image_urls = upload(args.api_key, ss)
+        images = []
+        screenshot = input("Do you want to take screenshots? [Y/n] : ")
+        if not screenshot.lower() == 'n':
+            fname = input("Enter file path with extension : ")
+            images += getscreenshot(fname)
+        prompt = input("Do you want to upload selected files? [y/N] : ")
+        if prompt.lower() == 'y':
+            images += [x for x in input('Enter filenames separated by space :').split() ]
+        prompt = input("Do you want to upload from url? [y/N] : ")
+        if prompt.lower() == 'y':
+            images += [ x for x in input('Enter urls seperated by space : ').split()]
+        else:
+            print("Uploading all existing images from current directory...")
+            images = [x for x in os.listdir() if x.endswith(".png")]
+        image_urls = upload(args.api_key, images)
         if args.bbcode:
             printed_urls = ['[img]{}[/img]'.format(image_url) for image_url in image_urls]
+        # Fetch the MediaInfo details from media
         if args.media:
             outMsg = ""   
             outMsg += f"[size=4]{getFilename(fname)}[/size]"
@@ -202,15 +210,14 @@ def main():
         if not args.nobell and sys.stdout.isatty():
             sys.stdout.write('\a')
             sys.stdout.flush()
-    except (UploadFailed, ValueError) as e:
+    except (UploadFailed, ValueError, FileNotFoundError) as e:
         parser.error(str(e))
 
-    check=input("Do you want to delete the screenshots?\nResponse:[y/n]")
-    if check=="y":
-        folder_fname = os.getcwd()
-        for file_name in os.listdir(folder_fname):
+    prompt = input("Do you want to delete the screenshots? [y/N] : ")
+    if prompt.lower() == "y":
+        for file_name in images:
             if file_name.startswith('img'):
-                os.remove(folder_fname+"\\"+file_name)
+                os.remove(file_name)
         print("_"*50)
         print("Files uploaded to above urls\nAll screenshots were deleted.")
     else:
